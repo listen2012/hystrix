@@ -1,25 +1,29 @@
 package com.listen.hytrix.demo;
 
-import com.listen.hytrix.rxjava.counter.DefaultServiceStream;
-import com.listen.hytrix.rxjava.counter.ServiceCompletion;
-import com.listen.hytrix.rxjava.counter.ServiceCompletionMetrics;
-import com.listen.hytrix.rxjava.counter.ServiceCompletionStream;
+import com.listen.hytrix.rxjava.metrics.DefaultServiceEventType;
+import com.listen.hytrix.rxjava.metrics.ServiceCompletionMetrics;
 import org.junit.Test;
 
 public class HelloTest {
 
   @Test
-  public void test() {
-    ServiceCompletionStream stream = new ServiceCompletionStream();
-    ServiceCompletionMetrics metrics = new ServiceCompletionMetrics(stream);
+  public void test() throws InterruptedException {
+    new Thread(() -> {
+      for (int i = 0; i < 20; i++) {
+        try {
+          Thread.sleep(100);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+        ServiceCompletionMetrics.sendEvent("hi", DefaultServiceEventType.SUCCESS);
+      }
+    }).start();
     for (int i = 0; i < 20; i++) {
-      ServiceCompletion completion = new ServiceCompletion();
-      stream.write(completion);
+      Thread.sleep(100);
+      ServiceCompletionMetrics.sendEvent("bye", DefaultServiceEventType.FAIL);
     }
-    long[] ls = metrics.count();
-    for (long l : ls) {
-      System.out.println(l);
-    }
+
+    Thread.sleep(5000L);
 
   }
 

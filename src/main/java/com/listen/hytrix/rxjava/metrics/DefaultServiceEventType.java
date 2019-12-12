@@ -1,4 +1,4 @@
-package com.listen.hytrix.rxjava.counter;
+package com.listen.hytrix.rxjava.metrics;
 
 public enum DefaultServiceEventType implements ServiceEventType {
 

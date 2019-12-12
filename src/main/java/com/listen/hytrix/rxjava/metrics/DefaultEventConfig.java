@@ -1,10 +1,10 @@
-package com.listen.hytrix.rxjava.counter;
+package com.listen.hytrix.rxjava.metrics;
 
 public class DefaultEventConfig implements EventConfiguration {
 
   @Override
   public int getTimePeriod() {
-    return 10;
+    return 3;
   }
 
   @Override
