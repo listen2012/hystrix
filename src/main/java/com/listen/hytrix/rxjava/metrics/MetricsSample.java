@@ -5,12 +5,11 @@ import lombok.Data;
 @Data
 public class MetricsSample {
 
-  private long totalCount;
+    private long totalCount;
 
-  private long successCount;
+    private long successCount;
 
-  private long failureCount;
+    private long failureCount;
 
-  private double failureRate;
-
+    private Double failureRate;
 }

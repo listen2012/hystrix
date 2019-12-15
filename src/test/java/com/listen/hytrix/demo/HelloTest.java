@@ -1,7 +1,7 @@
 package com.listen.hytrix.demo;
 
 import com.listen.hytrix.rxjava.metrics.DefaultServiceEventType;
-import com.listen.hytrix.rxjava.metrics.ServiceCompletionMetrics;
+import com.listen.hytrix.rxjava.metrics.ServiceCompletionStreamMetrics;
 import org.junit.Test;
 
 public class HelloTest {
@@ -15,15 +15,15 @@ public class HelloTest {
         } catch (InterruptedException e) {
           e.printStackTrace();
         }
-        ServiceCompletionMetrics.sendEvent("hi", DefaultServiceEventType.SUCCESS);
+        ServiceCompletionStreamMetrics.newEmpty().doSendEvent("hi", DefaultServiceEventType.SUCCESS);
       }
     }).start();
     for (int i = 0; i < 20; i++) {
       Thread.sleep(100);
-      ServiceCompletionMetrics.sendEvent("bye", DefaultServiceEventType.FAIL);
+      ServiceCompletionStreamMetrics.newEmpty().doSendEvent("bye", DefaultServiceEventType.FAIL);
     }
 
-    Thread.sleep(5000L);
+    Thread.sleep(10000L);
 
   }
 

@@ -5,21 +5,22 @@ import rx.Observable;
 import rx.functions.Func1;
 import rx.functions.Func2;
 
-public abstract class ServiceEventCenter<Event extends ServiceEvent, Sample extends MetricsSample> {
+abstract class ServiceEventCenter<Event extends ServiceEvent, Sample extends MetricsSample> {
 
     protected final Observable<long[]> bucketedStream;
     private final Func1<Observable<Event>, Observable<long[]>> reduceBucketToSummary;
 
     protected ServiceEventCenter(final ServiceEventStream<Event> inputEventStream, final int bucketSizeInS) {
 
-        this.reduceBucketToSummary = eventOb -> eventOb.reduce(getEmptyBucketSummary(), reduce());
+        this.reduceBucketToSummary = eventOb -> eventOb.reduce(getEmptyBucketSummary(), reduce()).onBackpressureDrop();
         this.bucketedStream = Observable.defer(
             () -> inputEventStream.observe()
                 .window(bucketSizeInS, TimeUnit.SECONDS)
-//                .window(10)
+                //                .window(10)
                 .flatMap(reduceBucketToSummary)
-                .startWith(getEmptyBucketSummary()));
-        bucketedStream.subscribe(l -> System.out.println("center:" + l[0] + ":" + l[1]));
+                .startWith(getEmptyBucketSummary())
+                .onBackpressureDrop());
+        //        bucketedStream.subscribe(l -> System.out.println("center:" + l[0] + ":" + l[1]));
     }
 
 
@@ -32,6 +33,9 @@ public abstract class ServiceEventCenter<Event extends ServiceEvent, Sample exte
 
     abstract Func2<long[], Event, long[]> reduce();
 
+    /**
+     * long[] 转 统计对象
+     */
     abstract Sample metric(long[] l);
 
     protected Func2<long[], long[], long[]> mergePeriodBuckets() {

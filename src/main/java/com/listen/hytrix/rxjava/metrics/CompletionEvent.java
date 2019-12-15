@@ -5,9 +5,9 @@ import lombok.Data;
 @Data
 public class CompletionEvent implements ServiceEvent {
 
-    private com.listen.hytrix.rxjava.metrics.DefaultServiceEventType eventType;
+    private DefaultServiceEventType eventType;
 
-    public CompletionEvent(com.listen.hytrix.rxjava.metrics.DefaultServiceEventType eventType) {
+    public CompletionEvent(DefaultServiceEventType eventType) {
         this.eventType = eventType;
     }
 }
